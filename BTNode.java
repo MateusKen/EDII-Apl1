@@ -1,3 +1,4 @@
+
 /*
 TURMA 04G11
 NOME: ERIK SAMUEL VIANA HSU				TIA: 32265921
@@ -5,47 +6,51 @@ NOME: MATEUS KENZO IOCHIMOTO 				TIA: 32216289
 NOME: RODRIGO MACHADO DE ASSIS OLIVEIRA DE LIMA		TIA: 32234678
 NOME: THIAGO SHIHAN CARDOSO TOMA			TIA: 32210744
 */
-public class Node {
-	private String data;
-	private Node parent;
-	private Node left;
-	private Node right;
+
+import java.util.Stack;
+
+
+public class BTNode {
+	private char data;
+	private BTNode parent;
+	private BTNode left;
+	private BTNode right;
 	
-	public Node() {
-		this("", null);
+	public BTNode() {
+		this(' ', null);
 	}
-	public Node(String data) {
+	public BTNode(char data) {
 		this(data, null);
 	}
-	public Node(String data, Node parent) {
+	public BTNode(char data, BTNode parent) {
 		this.data = data;
 		this.parent = parent;
 		this.left = null;
 		this.right = null;
 	}
-	public String getData() {
+	public char getData() {
 		return data;
 	}
-	public void setData(String data) {
+	public void setData(char data) {
 		this.data = data;
 	}
-	public Node getParent() {
+	public BTNode getParent() {
 		return parent;
 	}
-	public void setParent(Node parent) {
+	public void setParent(BTNode parent) {
 		this.parent = parent;
 	}
-	public Node getLeft() {
+	public BTNode getLeft() {
 		return left;
 	}
-	public void setLeft(Node left) {
+	public void setLeft(BTNode left) {
 		this.left = left;
 		left.setParent(this);
 	}
-	public Node getRight() {
+	public BTNode getRight() {
 		return right;
 	}
-	public void setRight(Node right) {
+	public void setRight(BTNode right) {
 		this.right = right;
 		right.setParent(this);
 	}
@@ -87,6 +92,29 @@ public class Node {
 		return height + 1;
 	}
 	
+	//Verificar se é operador
+	public boolean isOperatores(char c) {
+		return c == '+' || c == '-' || c == '*' || c == '/';
+	}
+	
+	//Verificar precedencia dos operadores
+	public int precedencia(char c) {
+		if (c == '+' || c == '-') {
+			return 1;
+		}
+		else if (c == '*' || c == '/') {
+			return 2;
+		}
+		return 0;
+	}
+	
+	
+	public float visitar() {
+		//implementar
+	}
+	
+	
+	
 	@Override
 	public String toString() {
 		return "data: " + data
@@ -100,4 +128,4 @@ public class Node {
 				+ ", getHeight(): " + getHeight();
 	}
 	
-} // Fim da classe Node.java
+} // Fim da classe Node.java	
