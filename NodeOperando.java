@@ -5,6 +5,8 @@ NOME: MATEUS KENZO IOCHIMOTO 				TIA: 32216289
 NOME: RODRIGO MACHADO DE ASSIS OLIVEIRA DE LIMA		TIA: 32234678
 NOME: THIAGO SHIHAN CARDOSO TOMA			TIA: 32210744
 */
-public class NodeOperando {
-
+public class NodeOperando extends BTNode{
+	public NodeOperando(char expressao) {
+		super(expressao);
+	}
 }
