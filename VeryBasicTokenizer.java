@@ -71,7 +71,7 @@ public class VeryBasicTokenizer {
 				  tokens.add(")");
 				  currChar = getNextChar();
 			} else if (currChar == '\0') {
-			  System.out.println("Chegou ao final da string.");
+			  //System.out.println("Chegou ao final da string.");
 			  isTokenizing = false;
 			
 			}else {
@@ -80,7 +80,7 @@ public class VeryBasicTokenizer {
 				isTokenizing = false;
 			}
 		}
-		System.out.println("Encerrando...\n");
+		//System.out.println("Encerrando...\n");
 		return tokens;
 	}
 	
