@@ -1,54 +1,29 @@
 /*
 TURMA 04G11
-NOME: ERIK SAMUEL VIANA HSU				TIA: 32265921
-NOME: MATEUS KENZO IOCHIMOTO 				TIA: 32216289
+NOME: ERIK SAMUEL VIANA HSU							TIA: 32265921
+NOME: MATEUS KENZO IOCHIMOTO 						TIA: 32216289
 NOME: RODRIGO MACHADO DE ASSIS OLIVEIRA DE LIMA		TIA: 32234678
-NOME: THIAGO SHIHAN CARDOSO TOMA			TIA: 32210744
+NOME: THIAGO SHIHAN CARDOSO TOMA					TIA: 32210744
 */
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Stack;
 
-
-public class BinaryTree {
-	private Node root;
+public class BinaryTree extends Main {
+	private BTNode root;
 	public BinaryTree() {
 		this(null);
 	}
-	public BinaryTree(Node root) {
+	public BinaryTree(BTNode root) {
 		this.root = root;
 	}
 	public boolean isEmpty() {
 		return root == null;
 	}
-	public int getDegree() {
-		return getDegreeHelper(root);
-	}
-	
-	private int getDegreeHelper(Node node) {
-		if (node == null || node.isLeaf()) {
-			return 0;
-		}
-		int degree = node.getDegree();
-		if (node.hasLeftChild())
-			degree = Math.max(degree, getDegreeHelper(node.getLeft()));
-		if (node.hasRightChild())
-			degree = Math.max(degree,getDegreeHelper(node.getRight()));
-		return degree;
-	}
-	
-	public int getHeight() {
-		if (isEmpty()) {
-			return -1;
-		}
-		return root.getHeight();	
-	}
-	
 	//Percurso Em ordem
 	public String inOrderTraversal() {
 		return inOrderTraversalHelper(root);
 	}
-	private String inOrderTraversalHelper(Node node) {
+	private String inOrderTraversalHelper(BTNode node) {
 		if (node == null) {
 			return "";
 		}
@@ -63,7 +38,7 @@ public class BinaryTree {
 	public String preOrderTraversal() {
 		return preOrderTraversalHelper(root);
 	}
-	private String preOrderTraversalHelper(Node node) {
+	private String preOrderTraversalHelper(BTNode node) {
 		if (node == null) {
 			return "";
 		}
@@ -78,7 +53,7 @@ public class BinaryTree {
 	public String postOrderTraversal() {
 		return postOrderTraversalHelper(root);
 	}
-	private String postOrderTraversalHelper(Node node) {
+	private String postOrderTraversalHelper(BTNode node) {
 		if (node == null) {
 			return "";
 		}
@@ -89,29 +64,60 @@ public class BinaryTree {
 		return sb.toString();
 	}
 	
-	//Percurso em Profundidade
-	public String levelOrderTraversal() {
-		return levelOrderTraversalHelper(root);
-	}
-	private String levelOrderTraversalHelper(Node node) {
-		if (node == null) {
-			return "";
-		}
-		StringBuilder sb = new StringBuilder();
-		Queue<Node> queue = new LinkedList<>();
-		queue.add(node);
-		while (!queue.isEmpty()) {
-			Node visited = queue.remove();
-			sb.append(visited.getData() + " ");
-			if(visited.hasLeftChild()) {
-				queue.add(visited.getLeft());
+	//Metodo buildExpressionTree
+	public void buildExpressionTree(String expInfixa) {
+		if(isValidExpression(expInfixa)) {
+			//converter a expressao infixa em pos fixa
+			String expPosfixa = infixaPosfixa(expInfixa);
+			//Criar a arvore a partir da expressao pos-fixa
+			Stack<BTNode> nodeStack = new Stack<>();
+			int index = 0;
+			for (char token : expPosfixa.toCharArray()) {
+				if (isOperator(token)) {
+					//Operador encontrado, criar no operador
+					BTNodeOperador operatorNode = new BTNodeOperador(token);
+					//Pop dois operandos da pilha
+					BTNode operando2= nodeStack.pop();
+					BTNode operando1= nodeStack.pop();
+					//Definir os filhos do no operador
+					operatorNode.setLeft(operando1);
+					operatorNode.setRight(operando2);
+					//Empilhar o no operador
+					nodeStack.push(operatorNode);
+				}
+				else {
+					//Operando encontrado, criar no operando
+					StringBuilder valorStr = new StringBuilder();
+					int startIndex = index;
+					
+					while(Character.isDigit(token) || token == '.') {
+						valorStr.append(token);
+						index++;
+						if (index < expPosfixa.length()) {
+							token = expPosfixa.charAt(index);
+						}
+						else {
+							break;
+						}
+						
+					}
+					float valor = Float.parseFloat(valorStr.toString());
+					BTNodeOperando operandNode = new BTNodeOperando(valor);
+					//Empilhar o no operando
+					nodeStack.push(operandNode);
+
+				}
 			}
-			if (visited.hasRightChild()) {
-				queue.add(visited.getRight());
-			}
+			// O ultimo no na pilha e a raiz da arvore
+			this.root = nodeStack.pop();
 		}
-		return sb.toString();
-	}
+		else {
+			System.out.println("Expressao invalida");
+		}
+	} //fim da classe buildExpressionTree
+	
+	
+	
 	
 	//Metodo toString()
 	@Override
