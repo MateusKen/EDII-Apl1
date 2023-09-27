@@ -6,6 +6,7 @@ NOME: RODRIGO MACHADO DE ASSIS OLIVEIRA DE LIMA		TIA: 32234678
 NOME: THIAGO SHIHAN CARDOSO TOMA					TIA: 32210744
 */
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -15,6 +16,8 @@ public class Main extends BTNode{
 		Scanner scanner = new Scanner(System.in);
 		BinaryTree arvore = new BinaryTree();
 		String expInfixa = "";
+		String expPosfixa = "";
+		
 		int opcao = 0;
 		do {
 			System.out.println("Menu de opções:");
@@ -32,15 +35,17 @@ public class Main extends BTNode{
 				scanner.nextLine(); //Consumir a quebra de linha pendente
 				expInfixa = scanner.nextLine();
 				if (isValidExpression(expInfixa)) {
-					arvore.buildExpressionTree(expInfixa);
-					System.out.println("Expressao valida!");
+					
+					//converte a expressao infixa em posfixa
+					expPosfixa = infixaPosfixa(expInfixa);
+					System.out.println("Expressao valida!\n");
 				}
 				else {
-					System.out.println("Expressao invalida!");
+					System.out.println("Expressao invalida!\n");
 				}
 				break;
 			case 2:
-				arvore.buildExpressionTree(expInfixa);
+				arvore.buildExpressionTree(expPosfixa);
 				System.out.println("Arvore criada!");
 				break;
 			case 3:
@@ -48,7 +53,7 @@ public class Main extends BTNode{
 				System.out.println(arvore.preOrderTraversal());
 				System.out.println("Arvore em Ordem: ");
 				System.out.println(arvore.inOrderTraversal());
-				System.out.println("Arvire em Pos-Ordem:");
+				System.out.println("Arvore em Pos-Ordem:");
 				System.out.println(arvore.postOrderTraversal());
 				break;
 			case 4:
@@ -62,24 +67,41 @@ public class Main extends BTNode{
 		} while (opcao != 5);	
 	}
 	
-	public static boolean isValidExpression(String expression) {
-		Stack<Character> stack = new Stack<>();
+	public static boolean isValidExpression(String expressao) {
+		VeryBasicTokenizer vbt = new VeryBasicTokenizer(expressao);
+		List <String> tokens = vbt.tokenize();	
+		//boolean valida = true;	
+		int contAbre = 0;
+		int contFecha = 0;
 		
-		for (char ch : expression.toCharArray()) {
-			if (ch == '(') {
-				stack.push(ch);
+		for (int i =0; i<tokens.size();i++) {
+			
+			if (tokens.get(i).equals("F"))
+				return false;
+			//System.out.println("token[" + i + " ]: "+ tokens.get(i));
+			if (tokens.get(i).equals("("))
+				contAbre++;
+			else if (tokens.get(i).equals(")"))
+				contFecha++;
+			
+			//Se parênteses for fechado sem que tenha sido aberto retorna false
+			if (contFecha > contAbre) {
+				System.out.print("Parênteses incorretos, expressão inválida.");
+				return false;
 			}
-			else if(ch == ')') {
-				if (stack.isEmpty() || stack.pop() != '(') {
-					return false; // parenteses desbalanceados
+			if (tokens.get(i).equals("*") || tokens.get(i).equals("/")|| tokens.get(i).equals("+")|| tokens.get(i).equals("-") ){
+				if (i+1 >= tokens.size())return false;
+			
+				else if (tokens.get(i+1).equals("*") || tokens.get(i+1).equals("/")|| tokens.get(i+1).equals("+")|| tokens.get(i+1).equals("-")) {
+					if (tokens.get(i+1).equals("*") || tokens.get(i+1).equals("/")|| tokens.get(i+1).equals("+")|| tokens.get(i+1).equals("-"))return false;
 				}
 			}
-			else if(!isOperator(ch) && !isOperand(ch)) {
-				return false; // caracter invalido
-			}
+			
 		}
-		return stack.isEmpty();
-	}
+		if (contAbre != contFecha) return false;
+		
+		return true;
+		}
 	
 	public static String infixaPosfixa(String expInfixa) {
 		StringBuilder posfixa = new StringBuilder();
@@ -124,7 +146,7 @@ public class Main extends BTNode{
 			posfixa.append(stackOperador.pop());
 		}
 		return posfixa.toString();
-} //fim da fun;'ao infixaPosfixa
+} //fim da funcao infixaPosfixa
 	
 	private static int precedencia(char operator) {
 		switch (operator) {
@@ -140,3 +162,4 @@ public class Main extends BTNode{
 	}
 
 }//fim da Main
+
