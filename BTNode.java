@@ -1,14 +1,10 @@
-
 /*
 TURMA 04G11
-NOME: ERIK SAMUEL VIANA HSU				TIA: 32265921
-NOME: MATEUS KENZO IOCHIMOTO 				TIA: 32216289
+NOME: ERIK SAMUEL VIANA HSU							TIA: 32265921
+NOME: MATEUS KENZO IOCHIMOTO 						TIA: 32216289
 NOME: RODRIGO MACHADO DE ASSIS OLIVEIRA DE LIMA		TIA: 32234678
-NOME: THIAGO SHIHAN CARDOSO TOMA			TIA: 32210744
+NOME: THIAGO SHIHAN CARDOSO TOMA					TIA: 32210744
 */
-
-import java.util.Stack;
-
 
 public class BTNode {
 	private char data;
@@ -92,29 +88,18 @@ public class BTNode {
 		return height + 1;
 	}
 	
-	//Verificar se é operador
-	public boolean isOperatores(char c) {
-		return c == '+' || c == '-' || c == '*' || c == '/';
-	}
-	
-	//Verificar precedencia dos operadores
-	public int precedencia(char c) {
-		if (c == '+' || c == '-') {
-			return 1;
-		}
-		else if (c == '*' || c == '/') {
-			return 2;
-		}
-		return 0;
-	}
-	
 	
 	public float visitar() {
-		//implementar
+		return Float.NaN;
 	}
 	
+	public static boolean isOperator(char ch) {
+		return ch == '+' || ch == '-' || ch == '*' || ch == '/';
+	}
 	
-	
+	public static boolean isOperand(char ch) {
+		return Character.isDigit(ch) || ch == '.';	//considera ponto como parte de operandos validos (numeros decimais)
+	}
 	@Override
 	public String toString() {
 		return "data: " + data
@@ -128,4 +113,4 @@ public class BTNode {
 				+ ", getHeight(): " + getHeight();
 	}
 	
-} // Fim da classe Node.java	
+} // Fim da classe Node.java
