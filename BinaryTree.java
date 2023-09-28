@@ -102,7 +102,6 @@ public class BinaryTree {
 				//Operando encontrado, criar no operando
 				float valor = Float.parseFloat(expPosfixa.get(i));
 				BTNodeOperando operandNode = new BTNodeOperando(valor);
-				System.out.println(valor);
 				//Empilhar o no operando
 				nodeStack.push(operandNode);
 
