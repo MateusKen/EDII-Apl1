@@ -5,18 +5,18 @@ NOME: MATEUS KENZO IOCHIMOTO 						TIA: 32216289
 NOME: RODRIGO MACHADO DE ASSIS OLIVEIRA DE LIMA		TIA: 32234678
 NOME: THIAGO SHIHAN CARDOSO TOMA					TIA: 32210744
 */
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 
 
-public class Main extends BTNode{
+public class Main{
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		BinaryTree arvore = new BinaryTree();
 		String expInfixa = "";
-		String expPosfixa = "";
+		List <String> expPosfixa = new ArrayList<>();
 		
 		int opcao = 0;
 		do {
@@ -45,6 +45,7 @@ public class Main extends BTNode{
 				}
 				break;
 			case 2:
+				System.out.println(expPosfixa);
 				arvore.buildExpressionTree(expPosfixa);
 				System.out.println("Arvore criada!");
 				break;
@@ -57,7 +58,7 @@ public class Main extends BTNode{
 				System.out.println(arvore.postOrderTraversal());
 				break;
 			case 4:
-				float result = arvore.visitar();
+				float result = arvore.calculo();
 				System.out.println("Resultado do calculo da expressao: " + result);
 				break;
 			case 5:
@@ -103,58 +104,78 @@ public class Main extends BTNode{
 		return true;
 		}
 	
-	public static String infixaPosfixa(String expInfixa) {
-		StringBuilder posfixa = new StringBuilder();
-		Stack<Character> stackOperador = new Stack<>();
+	
+	//Checam se determinada string eh Operador ou Operando
+	public static boolean isOperator(String s) {
+		return s == "+" || s == "-" || s == "*" || s == "/";
+	}
+	
+	public static boolean isOperand(String s) {
+		 for (char c : s.toCharArray()) {
+		        if (!Character.isDigit(c) && c != '.') {
+		            return false;	//considera ponto como parte de operandos validos (numeros decimais)
+		        }
+		    }
+		    return true;
+		}
+	
+	
+	
+	
+	public static List <String> infixaPosfixa(String expInfixa) {
+		VeryBasicTokenizer vbt = new VeryBasicTokenizer(expInfixa);
+		List <String> tokens = vbt.tokenize();
+		List <String> posfixa = new ArrayList<>();
 		
-		for (char token : expInfixa.toCharArray()) {
-			if (isOperand(token)) {
+		Stack<String> stackOperador = new Stack<>();
+		
+		
+		for (int i =0; i<tokens.size();i++) {
+			if (isOperand(tokens.get(i))) {
 				//Se o token eh um operando, adicionamos ao resultado
-				posfixa.append(token);
+				posfixa.add(tokens.get(i));
 			}
-			else if (isOperator(token)) {
+			else if (isOperator(tokens.get(i))) {
 				//Se for operador, tratamos a precedencia dos operadores
-				while (!stackOperador.isEmpty() && precedencia(token) <= precedencia(stackOperador.peek())) {
-					posfixa.append(stackOperador.pop());
+				while (!stackOperador.isEmpty() && precedencia(tokens.get(i)) <= precedencia(stackOperador.peek())) {
+					posfixa.add(stackOperador.pop());
 				}
-				stackOperador.push(token);
+				stackOperador.push(tokens.get(i));
 			}
-			else if(token == '(') {
+			else if(tokens.get(i) == "(") {
 				//Se o token eh um parentese aberto, empilhamos na pilha
-				stackOperador.push(token);
+				stackOperador.push(tokens.get(i));
 			}
-			else if(token == ')') {
+			else if(tokens.get(i).equals(")")) {
 				//Se o token for um parentese fechado, desempilhamos operadores ate encontrar o parentese aberto correspondente
-				while (!stackOperador.isEmpty() && stackOperador.peek() != '(') {
-					posfixa.append(stackOperador.pop());
+				while (!stackOperador.isEmpty() && !stackOperador.peek().equals("(")) {
+					posfixa.add(stackOperador.pop());
 				}
-				if(!stackOperador.isEmpty() && stackOperador.peek() != '(') {
+				if(!stackOperador.isEmpty() && stackOperador.peek().equals("(")) {
 					stackOperador.pop(); //remove o parentese aberto da pilha
 				}
-				else {
-					//parenteses desbalanceados
-					return "Expressao infixa invalida";
-				}
+
 			}
 		}
+		
 		//Desempilhamos os operadores restantes
 		while (!stackOperador.isEmpty()) {
-			if (stackOperador.peek() == '(' || stackOperador.peek() == ')') {
-				//parenteses desbalanceados
-				return "Expressao infixa invalida";
-			}
-			posfixa.append(stackOperador.pop());
+			posfixa.add(stackOperador.pop());
 		}
-		return posfixa.toString();
-} //fim da funcao infixaPosfixa
 	
-	private static int precedencia(char operator) {
+		return posfixa;
+		
+		}
+		
+ //fim da funcao infixaPosfixa
+	
+	private static int precedencia(String operator) {
 		switch (operator) {
-		case '+':
-		case '-':
+		case "+":
+		case "-":
 			return 1;
-		case '*':
-		case '/':
+		case "*":
+		case "/":
 			return 2;
 		default:
 			return 0; //operando ou parentese
