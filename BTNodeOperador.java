@@ -10,13 +10,14 @@ package apl1;
 public class BTNodeOperador extends BTNode{
 	private char operador;
 	
-	public BTNodeOperador(BTNode parent, char operador) {
-		super(parent);
+	public BTNodeOperador(char operador) {
+		super();
 		this.operador = operador;
 	}
 	
-	public char getOperador() {
-		return operador;
+	public BTNodeOperador(BTNode parent, char operador) {
+		super(parent);
+		this.operador = operador;
 	}
 	
 	public void setOperador(char operador) {
@@ -25,26 +26,6 @@ public class BTNodeOperador extends BTNode{
 	
 	@Override
 	public float visitar() {
-		float valorEsq = esquerda.visitar();
-		float valorDir = direita.visitar();
-		
-		switch (operador) {
-		case '+':
-			return valorEsq + valorDir;
-		case '-':
-			return valorEsq - valorDir;
-		case '*': 
-			return valorEsq * valorDir;
-		case '/':
-			if (valorDir != 0) {
-				return valorEsq / valorDir;
-			}
-			else {
-				System.out.println("Divisao por zero!");
-				return Float.NaN;
-			}
-		default:
-			return Float.NaN;
-		}
+		return operador;
 	}
 }
