@@ -11,6 +11,11 @@ package apl1;
 public class BTNodeOperando extends BTNode{
 	private float valor;
 	
+	public BTNodeOperando(float valor) {
+		super();
+		this.valor = valor;
+	}
+	
 	public BTNodeOperando(BTNode parent, float valor) {
 		super(parent);
 		this.valor = valor;
