@@ -12,6 +12,12 @@ public class BTNode {
 	private BTNode left;
 	private BTNode right;
 	
+	public BTNode() {
+		parent = null;
+		left = null;
+		right = null;
+	}
+	
 	public BTNode(BTNode parent) {
 		this.parent = parent;
 		this.left = null;
@@ -102,9 +108,9 @@ public class BTNode {
 	
 	@Override
 	public String toString() {
-		return ", parent: " + (parent != null ? parent.getData() : "null")
-				+ ", left: " + (left != null ? left.getData() : "null")
-				+ ", right: " + (right != null ? right.getData(): "null")
+		return "parent: " + (parent != null ? parent.visitar() : "null")
+				+ ", left: " + (left != null ? left.visitar() : "null")
+				+ ", right: " + (right != null ? right.visitar(): "null")
 				+ ", isRoot()" + isRoot()
 				+ ", isLeaf(): " + isLeaf()
 				+ ", getDegree(): " + getDegree()
