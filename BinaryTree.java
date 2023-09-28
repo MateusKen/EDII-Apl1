@@ -5,11 +5,11 @@ NOME: MATEUS KENZO IOCHIMOTO 						TIA: 32216289
 NOME: RODRIGO MACHADO DE ASSIS OLIVEIRA DE LIMA		TIA: 32234678
 NOME: THIAGO SHIHAN CARDOSO TOMA					TIA: 32210744
 */
-package apl1;
 
+import java.util.List;
 import java.util.Stack;
 
-public class BinaryTree extends Main {
+public class BinaryTree {
 	private BTNode root;
 	public BinaryTree() {
 		this(null);
@@ -17,9 +17,20 @@ public class BinaryTree extends Main {
 	public BinaryTree(BTNode root) {
 		this.root = root;
 	}
+	
+	public BTNode getRoot() {
+		return root;
+	}
+	
 	public boolean isEmpty() {
 		return root == null;
 	}
+	
+	public static boolean isOperator(String s) {
+		return s == "+" || s == "-" || s == "*" || s == "/";
+	}
+	
+	
 	//Percurso Em ordem
 	public String inOrderTraversal() {
 		return inOrderTraversalHelper(root);
@@ -30,7 +41,7 @@ public class BinaryTree extends Main {
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append(inOrderTraversalHelper(node.getLeft()));
-		sb.append(node.visitar() + " ");
+		sb.append(node.getData() + " ");
 		sb.append(inOrderTraversalHelper(node.getRight()));
 		return sb.toString();
 	}
@@ -44,7 +55,7 @@ public class BinaryTree extends Main {
 			return "";
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append(node.visitar() + " ");
+		sb.append(node.getData() + " ");
 		sb.append(preOrderTraversalHelper(node.getLeft()));
 		sb.append(preOrderTraversalHelper(node.getRight()));
 		return sb.toString();
@@ -61,60 +72,45 @@ public class BinaryTree extends Main {
 		StringBuilder sb = new StringBuilder();
 		sb.append(postOrderTraversalHelper(node.getLeft()));
 		sb.append(postOrderTraversalHelper(node.getRight()));
-		sb.append(node.visitar() + " ");
+		sb.append(node.getData() + " ");
 		return sb.toString();
 	}
 	
+	public Float calculo() {
+		return getRoot().visitar();
+	}
+	
+	
 	//Metodo buildExpressionTree
-	public void buildExpressionTree(String expInfixa) {
-		if(isValidExpression(expInfixa)) {
-			//converter a expressao infixa em pos fixa
-			String expPosfixa = infixaPosfixa(expInfixa);
-			//Criar a arvore a partir da expressao pos-fixa
-			Stack<BTNode> nodeStack = new Stack<>();
-			int index = 0;
-			for (char token : expPosfixa.toCharArray()) {
-				if (isOperator(token)) {
-					//Operador encontrado, criar no operador
-					BTNodeOperador operatorNode = new BTNodeOperador(token);
-					//Pop dois operandos da pilha
-					BTNode operando2= nodeStack.pop();
-					BTNode operando1= nodeStack.pop();
-					//Definir os filhos do no operador
-					operatorNode.setLeft(operando1);
-					operatorNode.setRight(operando2);
-					//Empilhar o no operador
-					nodeStack.push(operatorNode);
-				}
-				else {
-					//Operando encontrado, criar no operando
-					StringBuilder valorStr = new StringBuilder();
-					int startIndex = index;
-					
-					while(Character.isDigit(token) || token == '.') {
-						valorStr.append(token);
-						index++;
-						if (index < expPosfixa.length()) {
-							token = expPosfixa.charAt(index);
-						}
-						else {
-							break;
-						}
-						
-					}
-					float valor = Float.parseFloat(valorStr.toString());
-					BTNodeOperando operandNode = new BTNodeOperando(valor);
-					//Empilhar o no operando
-					nodeStack.push(operandNode);
+	public void buildExpressionTree(List <String> expPosfixa) {
+		//Criar a arvore a partir da expressao pos-fixa
+		Stack<BTNode> nodeStack = new Stack<>();
+		for (int i =0; i<expPosfixa.size();i++) {
+			if (isOperator(expPosfixa.get(i))) {
+				//Operador encontrado, criar no operador
+				BTNodeOperador operatorNode = new BTNodeOperador(expPosfixa.get(i).charAt(0));
+				//Pop dois operandos da pilha
+				BTNode operando2= nodeStack.pop();
+				BTNode operando1= nodeStack.pop();
+				//Definir os filhos do no operador
+				operatorNode.setLeft(operando1);
+				operatorNode.setRight(operando2);
+				//Empilhar o no operador
+				nodeStack.push(operatorNode);
+			}
+			else {
+				//Operando encontrado, criar no operando
+				float valor = Float.parseFloat(expPosfixa.get(i));
+				BTNodeOperando operandNode = new BTNodeOperando(valor);
+				System.out.println(valor);
+				//Empilhar o no operando
+				nodeStack.push(operandNode);
 
 				}
 			}
-			// O ultimo no na pilha e a raiz da arvore
-			this.root = nodeStack.pop();
-		}
-		else {
-			System.out.println("Expressao invalida");
-		}
+			// O ultimo no na pilha eh a raiz da arvore
+			root = nodeStack.pop();
+	
 	} //fim da classe buildExpressionTree
 	
 	
@@ -123,7 +119,7 @@ public class BinaryTree extends Main {
 	//Metodo toString()
 	@Override
 	public String toString() {
-		return "BinaryTree - isEmpty(): " + isEmpty() + ", getDegree(): " + getDegree() + ", getHeight(): " + getHeight() + ", root => { " + root + " }";
+		return "BinaryTree - isEmpty(): " + isEmpty() + ", getDegree(): " + root.getDegree() + ", getHeight(): " + root.getHeight() + ", root => { " + root + " }";
 	}
 	
 } // fim da classe BinaryTree
