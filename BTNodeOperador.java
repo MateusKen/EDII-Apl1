@@ -5,15 +5,22 @@ NOME: MATEUS KENZO IOCHIMOTO 						TIA: 32216289
 NOME: RODRIGO MACHADO DE ASSIS OLIVEIRA DE LIMA		TIA: 32234678
 NOME: THIAGO SHIHAN CARDOSO TOMA					TIA: 32210744
 */
+package apl1;
 
 public class BTNodeOperador extends BTNode{
 	private char operador;
-	private BTNode esquerda;
-	private BTNode direita;
 	
+	public BTNodeOperador(BTNode parent, char operador) {
+		super(parent);
+		this.operador = operador;
+	}
 	
-	public BTNodeOperador(char valor) {
-		super(valor);
+	public char getOperador() {
+		return operador;
+	}
+	
+	public void setOperador(char operador) {
+		this.operador = operador;
 	}
 	
 	@Override
